@@ -1,5 +1,8 @@
+import 'package:arcore/screen/landing-screen.dart';
 import 'package:arcore/screen/registar-screen.dart';
+import 'package:arcore/viewModel/viewModel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -88,7 +91,7 @@ class _LoginDemoState extends State<LoginPage> {
                   },
                   child: const Text(
                     'Giriş',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    style: TextStyle(color: Colors.white, fontSize: 24),
                   ),
                 ),
               ),
@@ -109,12 +112,12 @@ class _LoginDemoState extends State<LoginPage> {
                   ),
                   label: const Text(
                     'Google ile Giriş',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
                 ),
               ),
               const SizedBox(
-                height: 90,
+                height: 70,
               ),
               GestureDetector(
                 onTap: () {
@@ -126,7 +129,10 @@ class _LoginDemoState extends State<LoginPage> {
                 },
                 child: const Text(
                   'Hesabın yok mu? Yeni hesap oluştur.',
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold),
                 ),
               )
             ],
@@ -135,6 +141,22 @@ class _LoginDemoState extends State<LoginPage> {
       ),
     );
   }
-  
- Future<void> loginSubmit() async{}
+
+  Future<void> loginSubmit() async {
+    if (formKey.currentState!.validate()) {
+      try {
+        final provider = Provider.of<ViewModel>(context, listen: false);
+        provider.singInWithEmailAndPass(
+            emailController.text, passController.text);
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const LandingPage(),
+            ));
+      } catch (e) {
+        debugPrint('LOGİN OLMADA HATA ÇIKTO GELEN HATA ${e.toString()}');
+      }
+    }
+  }
 }

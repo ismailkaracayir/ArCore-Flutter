@@ -8,9 +8,9 @@ class Repository implements FireBaseBase {
   final FireBaseService firebaseFirestore = getIt<FireBaseService>();
 
   @override
-  Future<UserModel> createWithUserEmailAndPass(String email, String pass) {
-    // TODO: implement createWithUserEmailAndPass
-    throw UnimplementedError();
+  Future<UserModel> createWithUserEmailAndPass(
+      String email, String pass) async {
+    return firebaseFirestore.createWithUserEmailAndPass(email, pass);
   }
 
   @override
@@ -19,9 +19,8 @@ class Repository implements FireBaseBase {
   }
 
   @override
-  Future<UserModel> singInWithEmailAndPass(String email, String pass) {
-    // TODO: implement singInWithEmailAndPass
-    throw UnimplementedError();
+  Future<UserModel> singInWithEmailAndPass(String email, String pass) async {
+   return firebaseFirestore.singInWithEmailAndPass(email, pass);
   }
 
   @override

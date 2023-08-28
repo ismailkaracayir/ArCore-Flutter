@@ -1,5 +1,9 @@
+import 'package:arcore/model/user-model.dart';
+import 'package:arcore/screen/landing-screen.dart';
 import 'package:arcore/screen/login-screen.dart';
+import 'package:arcore/viewModel/viewModel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({super.key});
@@ -110,6 +114,14 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<void> _registerSubmit() async {
     if (widget.formKey.currentState!.validate()) {
       debugPrint('Form geçerli');
+
+      try {
+        final provider = Provider.of<ViewModel>(context, listen: false);
+        await provider.createWithUserEmailAndPass(
+            emailController.text, passController.text);
+      } catch (e) {
+        debugPrint('REGİSTER OLMADA HATA ÇIKTI GELEN HATA   ${e.toString()}');
+      }
     }
   }
 }

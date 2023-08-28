@@ -11,7 +11,10 @@ class LandingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<ViewModel>(context, listen: false);
     if (provider.state == ViewState.idle) {
+      debugPrint('LANDİNGPAGE STATE GEÇİLDİ');
       if (provider.user != null) {
+        debugPrint('LANDİNGPAGE USER GEÇİLDİ');
+
         return HomePage(user: provider.user!);
       } else {
         return LoginPage();

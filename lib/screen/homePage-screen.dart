@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
   UserModel user;
-   HomePage({super.key, required this.user});
+  HomePage({super.key, required this.user});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -12,6 +12,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Center(child: Text('ARDeco Studio')),
+      ),
+    );
   }
 }
