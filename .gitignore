@@ -4,6 +4,8 @@
 
 ## User settings
 xcuserdata/
+android/app/google-services.json
+lib/firebase_options.dart
 
 ## compatibility with Xcode 8 and earlier (ignoring not required starting Xcode 9)
 *.xcscmblueprint
