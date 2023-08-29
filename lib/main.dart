@@ -1,3 +1,5 @@
+import 'package:arcore/model/user-model.dart';
+import 'package:arcore/screen/homePage-screen.dart';
 import 'package:arcore/screen/landing-screen.dart';
 import 'package:arcore/screen/login-screen.dart';
 import 'package:arcore/viewModel/viewModel.dart';
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
-        home: LandingPage(),
+        home: const LandingPage(),
       ),
     );
   }

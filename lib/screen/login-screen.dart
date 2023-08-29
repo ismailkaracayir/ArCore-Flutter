@@ -150,6 +150,8 @@ class _LoginDemoState extends State<LoginPage> {
         final provider = Provider.of<ViewModel>(context, listen: false);
         provider.singInWithEmailAndPass(
             emailController.text, passController.text);
+        emailController.text = '';
+        passController.text = '';
       } catch (e) {
         debugPrint('LOGİN OLMADA HATA ÇIKTO GELEN HATA ${e.toString()}');
       }

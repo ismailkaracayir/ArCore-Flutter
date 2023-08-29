@@ -23,9 +23,9 @@ class FireBaseService implements FireBaseBase {
   }
 
   @override
-  Future<UserModel> singInWithEmailAndPass(String email, String pass)async {
-         UserCredential credential = await firebaseAuth
-        .signInWithEmailAndPassword(email: email, password: pass);
+  Future<UserModel> singInWithEmailAndPass(String email, String pass) async {
+    UserCredential credential = await firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: pass);
     return _userModelFromFirebase(credential.user);
   }
 
@@ -36,9 +36,9 @@ class FireBaseService implements FireBaseBase {
   }
 
   @override
-  Future<bool> singOut() {
-    // TODO: implement singOut
-    throw UnimplementedError();
+  Future<bool> singOut() async {
+    await firebaseAuth.signOut();
+    return true;
   }
 
   UserModel _userModelFromFirebase(User? user) {

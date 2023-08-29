@@ -1,5 +1,8 @@
 import 'package:arcore/model/user-model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../viewModel/viewModel.dart';
 
 class HomePage extends StatefulWidget {
   UserModel user;
@@ -17,9 +20,25 @@ class _HomePageState extends State<HomePage> {
         automaticallyImplyLeading: false,
         title: const Center(child: Text('ARDeco Studio')),
       ),
-      body: Center(
-        child: Text('Homepage'),
+      body: Column(
+        children: [
+          TextButton(
+              onPressed: () async {
+                await _singOut();
+              },
+              child: Text('Çıkış')),
+          Center(
+            child: Text('${widget.user.email}'),
+          ),
+        ],
       ),
     );
+  }
+
+  Future<void> _singOut() async {
+    final provider = Provider.of<ViewModel>(context, listen: false);
+    if (await provider.singOut()) {
+      debugPrint('ÇIKIŞ İŞLEMİ BAŞARILIR::::::');
+    }
   }
 }

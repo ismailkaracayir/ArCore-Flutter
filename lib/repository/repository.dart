@@ -20,7 +20,7 @@ class Repository implements FireBaseBase {
 
   @override
   Future<UserModel> singInWithEmailAndPass(String email, String pass) async {
-   return firebaseFirestore.singInWithEmailAndPass(email, pass);
+    return firebaseFirestore.singInWithEmailAndPass(email, pass);
   }
 
   @override
@@ -30,8 +30,7 @@ class Repository implements FireBaseBase {
   }
 
   @override
-  Future<bool> singOut() {
-    // TODO: implement singOut
-    throw UnimplementedError();
+  Future<bool> singOut() async {
+    return firebaseFirestore.singOut();
   }
 }

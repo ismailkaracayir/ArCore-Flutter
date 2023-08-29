@@ -121,6 +121,7 @@ class _RegisterPageState extends State<RegisterPage> {
         final provider = Provider.of<ViewModel>(context, listen: false);
         await provider.createWithUserEmailAndPass(
             emailController.text, passController.text);
+
         await CoolAlert.show(
             backgroundColor: Colors.green,
             barrierDismissible: false,
@@ -131,7 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
             autoCloseDuration: const Duration(seconds: 2),
             confirmBtnText: ' ',
             confirmBtnColor: Colors.white);
-        Navigator.pop(context,emailController.text);
+        Navigator.pop(context, emailController.text);
       } catch (e) {
         debugPrint('REGİSTER OLMADA HATA ÇIKTI GELEN HATA   ${e.toString()}');
       }

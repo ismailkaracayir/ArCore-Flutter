@@ -38,7 +38,7 @@ class ViewModel extends ChangeNotifier implements FireBaseBase {
   Future<UserModel> createWithUserEmailAndPass(
       String email, String pass) async {
     try {
-      await repository.createWithUserEmailAndPass(email, pass);
+      _user = await repository.createWithUserEmailAndPass(email, pass);
       return _user!;
     } finally {}
   }
@@ -63,8 +63,14 @@ class ViewModel extends ChangeNotifier implements FireBaseBase {
   }
 
   @override
-  Future<bool> singOut() {
-    // TODO: implement singOut
-    throw UnimplementedError();
+  Future<bool> singOut() async {
+    try {
+      state = ViewState.busy;
+      bool temp = await repository.singOut();
+      _user = UserModel(userID: null, email: null);
+      return temp;
+    } finally {
+      state = ViewState.idle;
+    }
   }
 }
