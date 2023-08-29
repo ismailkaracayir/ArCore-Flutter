@@ -7,10 +7,9 @@ import '../service/auth-base.dart';
 enum ViewState { idle, busy }
 
 class ViewModel extends ChangeNotifier implements FireBaseBase {
+  ViewState _state = ViewState.idle;
   final Repository repository = getIt<Repository>();
   UserModel? _user;
-  ViewState _state = ViewState.idle;
-
   UserModel? get user => _user;
   ViewModel() {
     currentUser();
@@ -39,12 +38,9 @@ class ViewModel extends ChangeNotifier implements FireBaseBase {
   Future<UserModel> createWithUserEmailAndPass(
       String email, String pass) async {
     try {
-      state = ViewState.busy;
-      _user = await repository.createWithUserEmailAndPass(email, pass);
+      await repository.createWithUserEmailAndPass(email, pass);
       return _user!;
-    } finally {
-      state = ViewState.idle;
-    }
+    } finally {}
   }
 
   @override
@@ -52,6 +48,8 @@ class ViewModel extends ChangeNotifier implements FireBaseBase {
     try {
       state = ViewState.busy;
       _user = await repository.singInWithEmailAndPass(email, pass);
+      notifyListeners();
+
       return _user!;
     } finally {
       state = ViewState.idle;

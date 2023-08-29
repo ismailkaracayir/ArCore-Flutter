@@ -25,18 +25,12 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => ViewModel(),
       child: MaterialApp(
-        
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
-        home: Scaffold(
-          appBar: AppBar(
-            title: const Center(child: Text('ARDeco Studio')),
-          ),
-          body: LoginPage(),
-        ),
+        home: LandingPage(),
       ),
     );
   }

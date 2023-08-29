@@ -120,12 +120,14 @@ class _LoginDemoState extends State<LoginPage> {
                 height: 70,
               ),
               GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RegisterPage(),
-                      ));
+                onTap: () async {
+                  emailController.text = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RegisterPage(),
+                          )) ??
+                      '';
+                  passController.text = '';
                 },
                 child: const Text(
                   'Hesabın yok mu? Yeni hesap oluştur.',
@@ -148,12 +150,6 @@ class _LoginDemoState extends State<LoginPage> {
         final provider = Provider.of<ViewModel>(context, listen: false);
         provider.singInWithEmailAndPass(
             emailController.text, passController.text);
-        // ignore: use_build_context_synchronously
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const LandingPage(),
-            ));
       } catch (e) {
         debugPrint('LOGİN OLMADA HATA ÇIKTO GELEN HATA ${e.toString()}');
       }

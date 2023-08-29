@@ -9,10 +9,12 @@ class LandingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ViewModel>(context, listen: false);
+    final provider = Provider.of<ViewModel>(context);
     if (provider.state == ViewState.idle) {
       debugPrint('LANDİNGPAGE STATE GEÇİLDİ');
-      if (provider.user != null) {
+      if (provider.user!.email != null) {
+        debugPrint(provider.user.toString());
+
         debugPrint('LANDİNGPAGE USER GEÇİLDİ');
 
         return HomePage(user: provider.user!);

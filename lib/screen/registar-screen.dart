@@ -2,6 +2,7 @@ import 'package:arcore/model/user-model.dart';
 import 'package:arcore/screen/landing-screen.dart';
 import 'package:arcore/screen/login-screen.dart';
 import 'package:arcore/viewModel/viewModel.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -116,9 +117,21 @@ class _RegisterPageState extends State<RegisterPage> {
       debugPrint('Form geçerli');
 
       try {
+        debugPrint(emailController.text);
         final provider = Provider.of<ViewModel>(context, listen: false);
         await provider.createWithUserEmailAndPass(
             emailController.text, passController.text);
+        await CoolAlert.show(
+            backgroundColor: Colors.green,
+            barrierDismissible: false,
+            title: 'Kayıt Olma',
+            context: context,
+            type: CoolAlertType.success,
+            text: ' Başarı ile Kayıt olundu!',
+            autoCloseDuration: const Duration(seconds: 2),
+            confirmBtnText: ' ',
+            confirmBtnColor: Colors.white);
+        Navigator.pop(context,emailController.text);
       } catch (e) {
         debugPrint('REGİSTER OLMADA HATA ÇIKTI GELEN HATA   ${e.toString()}');
       }

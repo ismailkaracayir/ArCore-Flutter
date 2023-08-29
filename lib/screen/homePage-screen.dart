@@ -17,6 +17,9 @@ class _HomePageState extends State<HomePage> {
         automaticallyImplyLeading: false,
         title: const Center(child: Text('ARDeco Studio')),
       ),
+      body: Center(
+        child: Text('Homepage'),
+      ),
     );
   }
 }
