@@ -132,6 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
             autoCloseDuration: const Duration(seconds: 2),
             confirmBtnText: ' ',
             confirmBtnColor: Colors.white);
+        // ignore: use_build_context_synchronously
         Navigator.pop(context, emailController.text);
       } catch (e) {
         debugPrint('REGİSTER OLMADA HATA ÇIKTI GELEN HATA   ${e.toString()}');
