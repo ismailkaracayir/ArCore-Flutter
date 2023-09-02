@@ -1,17 +1,15 @@
-import 'package:arcore/model/user-model.dart';
-import 'package:arcore/screen/homePage-screen.dart';
 import 'package:arcore/screen/landing-screen.dart';
-import 'package:arcore/screen/login-screen.dart';
 import 'package:arcore/viewModel/viewModel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
-
 import 'firebase_options.dart';
 import 'locator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+    await Hive.initFlutter('arcore');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

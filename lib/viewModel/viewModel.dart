@@ -39,7 +39,7 @@ class ViewModel extends ChangeNotifier implements FireBaseBase {
       String email, String pass) async {
     try {
       _user = await repository.createWithUserEmailAndPass(email, pass);
-      return _user!;
+      return user!;
     } finally {}
   }
 
@@ -48,18 +48,23 @@ class ViewModel extends ChangeNotifier implements FireBaseBase {
     try {
       state = ViewState.busy;
       _user = await repository.singInWithEmailAndPass(email, pass);
-      notifyListeners();
-
-      return _user!;
+      return user!;
     } finally {
       state = ViewState.idle;
     }
   }
 
   @override
-  Future<UserModel> singInWithGoogle() {
-    // TODO: implement singInWithGoogle
-    throw UnimplementedError();
+  Future<UserModel> singInWithGoogle() async {
+    try {
+
+      state = ViewState.busy;
+      _user = await repository.singInWithGoogle();
+      return user!;
+      
+    } finally {
+      state = ViewState.idle;
+    }
   }
 
   @override

@@ -1,4 +1,3 @@
-import 'package:arcore/screen/landing-screen.dart';
 import 'package:arcore/screen/registar-screen.dart';
 import 'package:arcore/viewModel/viewModel.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +104,9 @@ class _LoginDemoState extends State<LoginPage> {
                     color: Colors.green,
                     borderRadius: BorderRadius.circular(20)),
                 child: TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    _logingoogle();
+                  },
                   icon: const Icon(
                     Icons.social_distance,
                     color: Colors.white,
@@ -155,6 +156,16 @@ class _LoginDemoState extends State<LoginPage> {
       } catch (e) {
         debugPrint('LOGİN OLMADA HATA ÇIKTO GELEN HATA ${e.toString()}');
       }
+    }
+  }
+
+  Future<void> _logingoogle() async {
+    try {
+      final provider = Provider.of<ViewModel>(context, listen: false);
+      await provider.singInWithGoogle();
+    } catch (erorr) {
+      debugPrint(
+          'GOOGLE LOGİN OLMADA HATA ÇIKTO GELEN HATA ${erorr.toString()}');
     }
   }
 }

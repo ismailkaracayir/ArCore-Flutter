@@ -24,9 +24,8 @@ class Repository implements FireBaseBase {
   }
 
   @override
-  Future<UserModel> singInWithGoogle() {
-    // TODO: implement singInWithGoogle
-    throw UnimplementedError();
+  Future<UserModel> singInWithGoogle() async {
+    return await firebaseFirestore.singInWithGoogle();
   }
 
   @override

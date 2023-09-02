@@ -1,4 +1,5 @@
 import 'package:arcore/model/user-model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,21 +18,22 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        
+        actions: [
+          IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.add))
+        ],
+        leading: IconButton(
+          onPressed: () async {
+            await _singOut();
+          },
+          icon: const Icon(
+            CupertinoIcons.power,
+          ),
+        ),
         automaticallyImplyLeading: false,
         title: const Center(child: Text('ARDeco Studio')),
       ),
-      body: Column(
-        children: [
-          TextButton(
-              onPressed: () async {
-                await _singOut();
-              },
-              child: Text('Çıkış')),
-          Center(
-            child: Text('${widget.user.email}'),
-          ),
-        ],
-      ),
+      body: scro
     );
   }
 
