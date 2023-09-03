@@ -18,7 +18,7 @@ class ItemModelAdapter extends TypeAdapter<ItemModel> {
     };
     return ItemModel(
       itemID: fields[0] as String,
-      img: fields[1] as Image,
+      img: fields[1] as Uint8List,
       name: fields[2] as String?,
     );
   }

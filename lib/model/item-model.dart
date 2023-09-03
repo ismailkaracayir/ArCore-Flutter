@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'dart:typed_data';
+
 import 'package:hive/hive.dart';
 part 'item-model.g.dart';
 
@@ -8,7 +9,7 @@ class ItemModel {
   final String itemID;
 
   @HiveField(1)
-  Image img;
+  Uint8List img;
 
   @HiveField(2)
   String? name;
