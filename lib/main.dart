@@ -6,10 +6,12 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'locator.dart';
+import 'model/item-model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
     await Hive.initFlutter('arcore');
+      Hive.registerAdapter(ItemModelAdapter());
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
