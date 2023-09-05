@@ -1,6 +1,5 @@
-import 'dart:io';
 import 'dart:typed_data';
-import 'package:flutter/services.dart' show rootBundle;
+
 import 'package:arcore/model/user-model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,17 +12,19 @@ import '../viewModel/viewModel.dart';
 class HomePage extends StatefulWidget {
   UserModel user;
   HomePage({super.key, required this.user});
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  List<ItemModel> itemList = [];
+  late bool isLoading;
+
   @override
   void initState() {
     super.initState();
-    saveHiveDB();
-    debugPrint('init çalıştı');
+    isLoading = false;
+    readHiveDB();
   }
 
   @override
@@ -43,16 +44,30 @@ class _HomePageState extends State<HomePage> {
           ),
           title: const Center(child: Text('ARDeco Studio')),
         ),
-        body: ListView.builder(
-          itemCount: 120,
-          itemBuilder: (context, index) {
-            return Card(
-              child: ListTile(
-                title: Text('deenme'),
-              ),
-            );
-          },
-        ));
+        body: isLoading == true
+            ? ListView.builder(
+                itemCount: itemList.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: ListTile(
+                      leading: Image.memory(
+                        itemList[index].img,
+                        width: 100,
+                        fit: BoxFit.scaleDown,
+                      ),
+                      title: Text('${itemList[index].name}'),
+                      trailing: const Icon(
+                        CupertinoIcons.videocam_fill,
+                        color: Colors.green,
+                        size: 40,
+                      ),
+                    ),
+                  );
+                },
+              )
+            : const Center(
+                child: CircularProgressIndicator(),
+              ));
   }
 
   Future<void> _singOut(BuildContext context) async {
@@ -62,53 +77,14 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> reedHiveDB() async {
-    await Hive.openBox<ItemModel>('Item');
-    debugPrint('*************************************');
-    debugPrint(Hive.box<ItemModel>('Item').length.toString());
+  Future<void> readHiveDB() async {
+    final box = await Hive.openBox<ItemModel>('Item');
+    debugPrint('init çalıştı');
+    for (var element in box.values) {
+      itemList.add(element);
+    }
+    setState(() {
+      isLoading = true;
+    });
   }
-}
-
-Future<void> saveHiveDB() async {
-  debugPrint('LANDİNG PAGE HİVE ÇALIŞTI');
-  await Hive.openBox<ItemModel>('Item');
-  List<ItemModel> itemList = [];
-  itemList.addAll([
-    ItemModel(
-        itemID: '1',
-        img: await loadAssetImageAsUint8List(
-            'assets/images/koltuk.jpeg'), //File('assets/images/koltuk.jpeg').readAsBytes(),
-        name: 'koltuk'),
-    ItemModel(
-        itemID: '2',
-        img: await loadAssetImageAsUint8List(
-            'assets/images/koltuk2.jpeg'), //File('assets/images/koltuk.jpeg').readAsBytes(),
-        name: 'koltuk2'),
-    ItemModel(
-        itemID: '3',
-        img: await loadAssetImageAsUint8List(
-            'assets/images/koltuk3.jpeg'), //File('assets/images/koltuk.jpeg').readAsBytes(),
-        name: 'koltuk3'),
-    ItemModel(
-        itemID: '4',
-        img: await loadAssetImageAsUint8List(
-            'assets/images/sandalye.jpeg'), //File('assets/images/koltuk.jpeg').readAsBytes(),
-        name: 'sandalye'),
-    ItemModel(
-        itemID: '5',
-        img: await loadAssetImageAsUint8List(
-            'assets/images/sandalye2.webp'), //File('assets/images/koltuk.jpeg').readAsBytes(),
-        name: 'sandalye2'),
-  ]);
-  var box = Hive.box<ItemModel>('Item');
-  await box.clear();
-  itemList.forEach((element) {
-    box.add(element);
-  });
-}
-
-Future<Uint8List> loadAssetImageAsUint8List(String assetPath) async {
-  final ByteData data = await rootBundle.load(assetPath);
-  debugPrint(data.buffer.asUint8List().toString());
-  return data.buffer.asUint8List();
 }
