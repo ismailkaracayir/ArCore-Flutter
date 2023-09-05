@@ -38,8 +38,8 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           actions: [
             IconButton(
-                onPressed: () {
-                  addNewItem();
+                onPressed: () async {
+                  await addNewItem();
                 },
                 icon: const Icon(CupertinoIcons.add))
           ],
@@ -128,38 +128,46 @@ class _HomePageState extends State<HomePage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Yeni Fotoğraf Ekle'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GestureDetector(
-                  onTap: () async {
-                    debugPrint('img çalıştı');
-                    await newImgPicker();
-                    setState(() {});
-                  },
-                  child: newItemImg == null
-                      ? Image.asset(
-                          'assets/images/empty-img.jpeg',
-                          width: 200,
-                          height: 220,
-                        )
-                      : Image.file(
-                          newItemImg!,
-                          width: 200,
-                          height: 220,
-                        )),
-              SizedBox(
-                width: 200,
-                height: 40,
-                child: TextFormField(
-                  controller: controller,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'İsim',
+          content: StatefulBuilder(
+            builder: (context, setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  GestureDetector(
+                      onTap: () async {
+                        debugPrint('img çalıştı');
+                        await newImgPicker();
+                        setState(() {});
+                      },
+                      child: newItemImg == null
+                          ? Image.asset(
+                              'assets/images/empty-img.jpeg',
+                              width: 200,
+                              height: 220,
+                            )
+                          : Image.file(
+                              newItemImg!,
+                              width: 200,
+                              height: 200,
+                              fit: BoxFit.fill,
+                            )),
+                  const SizedBox(
+                    height: 20,
                   ),
-                ),
-              ),
-            ],
+                  SizedBox(
+                    width: 200,
+                    height: 40,
+                    child: TextFormField(
+                      controller: controller,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'İsim',
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
           actions: [
             TextButton(
@@ -174,7 +182,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future newImgPicker() async {
+  Future<void> newImgPicker() async {
     return showModalBottomSheet(
       context: context,
       builder: (context) {
