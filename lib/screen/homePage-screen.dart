@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:arcore/model/user-model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../model/item-model.dart';
 import '../viewModel/viewModel.dart';
@@ -19,12 +21,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<ItemModel> itemList = [];
   late bool isLoading;
+  late TextEditingController controller;
+  File? newItemImg;
 
   @override
   void initState() {
     super.initState();
     isLoading = false;
     readHiveDB();
+    controller = TextEditingController();
   }
 
   @override
@@ -32,7 +37,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         appBar: AppBar(
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.add))
+            IconButton(
+                onPressed: () {
+                  addNewItem();
+                },
+                icon: const Icon(CupertinoIcons.add))
           ],
           leading: IconButton(
             onPressed: () async {
@@ -50,12 +59,20 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) {
                   return Card(
                     child: ListTile(
-                      leading: Image.memory(
-                        itemList[index].img,
-                        width: 100,
-                        fit: BoxFit.scaleDown,
+                      leading: GestureDetector(
+                        onTap: () {
+                          bigImage(itemList[index].img);
+                        },
+                        child: Image.memory(
+                          itemList[index].img,
+                          width: 100,
+                          fit: BoxFit.scaleDown,
+                        ),
                       ),
-                      title: Text('${itemList[index].name}'),
+                      title: Text(
+                        '${itemList[index].name}',
+                        style: const TextStyle(fontSize: 18),
+                      ),
                       trailing: const Icon(
                         CupertinoIcons.videocam_fill,
                         color: Colors.green,
@@ -86,5 +103,117 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       isLoading = true;
     });
+  }
+
+  Future<void> bigImage(
+    Uint8List img,
+  ) async {
+    return await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Image.memory(
+            img,
+            width: 300,
+            height: 300,
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> addNewItem() async {
+    return await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Yeni Fotoğraf Ekle'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
+                  onTap: () async {
+                    debugPrint('img çalıştı');
+                    await newImgPicker();
+                    setState(() {});
+                  },
+                  child: newItemImg == null
+                      ? Image.asset(
+                          'assets/images/empty-img.jpeg',
+                          width: 200,
+                          height: 220,
+                        )
+                      : Image.file(
+                          newItemImg!,
+                          width: 200,
+                          height: 220,
+                        )),
+              SizedBox(
+                width: 200,
+                height: 40,
+                child: TextFormField(
+                  controller: controller,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'İsim',
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Vazgeç')),
+            TextButton(onPressed: () {}, child: const Text('Ekle')),
+          ],
+        );
+      },
+    );
+  }
+
+  Future newImgPicker() async {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          height: 120,
+          child: Column(
+            children: [
+              GestureDetector(
+                onTap: () async {
+                  var newImg =
+                      await ImagePicker().pickImage(source: ImageSource.camera);
+                  Navigator.pop(context);
+                  setState(() {
+                    newItemImg = (File(newImg!.path));
+                  });
+                },
+                child: const ListTile(
+                  leading: Icon(Icons.camera),
+                  title: Text('Kamera'),
+                ),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  var newImg = await ImagePicker()
+                      .pickImage(source: ImageSource.gallery);
+                  Navigator.pop(context);
+                  setState(() {
+                    newItemImg = (File(newImg!.path));
+                  });
+                },
+                child: const ListTile(
+                  leading: Icon(Icons.image),
+                  title: Text('Galeri'),
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 }
