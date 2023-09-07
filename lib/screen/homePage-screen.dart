@@ -4,11 +4,14 @@ import 'dart:typed_data';
 import 'package:arcore/model/user-model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../model/item-model.dart';
 import '../viewModel/viewModel.dart';
+import 'arcore-screen.dart';
 
 // resimleri hive kayıt ederken sorun oluyore resimleri utily8 cinsine cevirrip veritabanına eklemek ve ordan alırken to yapıp göstermek gerekiyor
 class HomePage extends StatefulWidget {
@@ -73,10 +76,18 @@ class _HomePageState extends State<HomePage> {
                         '${itemList[index].name}',
                         style: const TextStyle(fontSize: 18),
                       ),
-                      trailing: const Icon(
-                        CupertinoIcons.videocam_fill,
-                        color: Colors.green,
-                        size: 40,
+                      trailing: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                ArCorePage(img: itemList[index].img),
+                          ));
+                        },
+                        child: const Icon(
+                          CupertinoIcons.videocam_fill,
+                          color: Colors.green,
+                          size: 40,
+                        ),
                       ),
                     ),
                   );
@@ -95,11 +106,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> readHiveDB() async {
+    itemList.clear();
     final box = await Hive.openBox<ItemModel>('Item');
     debugPrint('init çalıştı');
     for (var element in box.values) {
       itemList.add(element);
     }
+    itemList = itemList.reversed.toList();
     setState(() {
       isLoading = true;
     });
@@ -147,16 +160,15 @@ class _HomePageState extends State<HomePage> {
                             )
                           : Image.file(
                               newItemImg!,
-                              width: 200,
-                              height: 200,
+                              width: 150,
+                              height: 150,
                               fit: BoxFit.fill,
                             )),
                   const SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   SizedBox(
-                    width: 200,
-                    height: 40,
+                    height: 25,
                     child: TextFormField(
                       controller: controller,
                       decoration: const InputDecoration(
@@ -175,7 +187,11 @@ class _HomePageState extends State<HomePage> {
                   Navigator.pop(context);
                 },
                 child: const Text('Vazgeç')),
-            TextButton(onPressed: () {}, child: const Text('Ekle')),
+            TextButton(
+                onPressed: () {
+                  submitNewItem();
+                },
+                child: const Text('Ekle')),
           ],
         );
       },
@@ -223,5 +239,40 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
+  }
+
+  Future<void> submitNewItem() async {
+    if (newItemImg != null && controller.text.isNotEmpty) {
+      await Hive.openBox<ItemModel>('Item');
+      var box = Hive.box<ItemModel>('Item');
+      ItemModel newItem = ItemModel(
+          itemID: '${itemList.length + 1}',
+          img: newItemImg!.readAsBytesSync(),
+          name: controller.text);
+      box.add(newItem);
+      controller.text = '';
+      newItemImg = null;
+      await Fluttertoast.showToast(
+          msg: "Ekleme İşlemi Başarılı",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      await readHiveDB();
+      Navigator.pop(context);
+
+      // debugPrint('EKLEME BAŞARILI');
+    } else {
+      Fluttertoast.showToast(
+          msg: "Lütfen Resim ve İsim Alanlarını Doldur",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 }

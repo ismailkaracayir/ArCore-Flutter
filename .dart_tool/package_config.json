@@ -26,6 +26,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "arcore_flutter_plugin",
+      "rootUri": "file:///Users/ismailkaracayir/.pub-cache/hosted/pub.dartlang.org/arcore_flutter_plugin-0.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "args",
       "rootUri": "file:///Users/ismailkaracayir/.pub-cache/hosted/pub.dartlang.org/args-2.4.1",
       "packageUri": "lib/",
@@ -174,6 +180,12 @@
       "rootUri": "file:///Users/ismailkaracayir/.pub-cache/hosted/pub.dartlang.org/dart_style-2.2.5",
       "packageUri": "lib/",
       "languageVersion": "2.17"
+    },
+    {
+      "name": "equatable",
+      "rootUri": "file:///Users/ismailkaracayir/.pub-cache/hosted/pub.dartlang.org/equatable-2.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "fake_async",
@@ -734,7 +746,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2023-09-05T13:20:14.682609Z",
+  "generated": "2023-09-07T08:26:14.418875Z",
   "generator": "pub",
   "generatorVersion": "2.18.6"
 }
