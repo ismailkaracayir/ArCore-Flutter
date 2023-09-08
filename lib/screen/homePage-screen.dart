@@ -2,12 +2,14 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:arcore/model/user-model.dart';
+import 'package:arcore/screen/api-client.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import '../model/item-model.dart';
 import '../viewModel/viewModel.dart';
@@ -26,6 +28,11 @@ class _HomePageState extends State<HomePage> {
   late bool isLoading;
   late TextEditingController controller;
   File? newItemImg;
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+  }
 
   @override
   void initState() {
@@ -77,11 +84,16 @@ class _HomePageState extends State<HomePage> {
                         style: const TextStyle(fontSize: 18),
                       ),
                       trailing: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
+                        onTap: () async {
+                           String path = await writeUint8ListToTemporaryFile(itemList[index].img);
+                           Uint8List removeImg = await ApiClient().removeBgApi(path);
+                          await Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) =>
-                                ArCorePage(img: itemList[index].img),
+                                ArCorePage(img: removeImg),
                           ));
+                          setState(() {
+                            debugPrint('SETSTATE ÇALIŞTI');
+                          });
                         },
                         child: const Icon(
                           CupertinoIcons.videocam_fill,
@@ -275,4 +287,13 @@ class _HomePageState extends State<HomePage> {
           fontSize: 16.0);
     }
   }
+}
+
+Future<String> writeUint8ListToTemporaryFile(Uint8List imageBytes) async {
+  String fileName = 'image.png';
+  Directory tempDir = await getTemporaryDirectory();
+  String filePath = '${tempDir.path}/$fileName';
+  File tempFile = File(filePath);
+  await tempFile.writeAsBytes(imageBytes);
+  return filePath;
 }

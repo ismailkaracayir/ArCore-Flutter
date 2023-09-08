@@ -24,10 +24,11 @@ class _ArCorePageState extends State<ArCorePage> {
   }
 
   displayEarthMapSpKere(ArCoreController coreController) async {
-    final materials =
-        ArCoreMaterial(color: Colors.blue, textureBytes: widget.img);
-    final shere = ArCoreSphere(materials: [materials]);
-    final node = ArCoreNode(shape: shere, position: vector64.Vector3(0, 0, -1));
+    
+    final node = ArCoreNode(
+      image: ArCoreImage(bytes: widget.img, width: 500, height: 500),
+      position: vector64.Vector3(0, -1, -2),
+    );
 
     augmentRealityCoreController!.addArCoreNode(node);
   }
@@ -38,7 +39,16 @@ class _ArCorePageState extends State<ArCorePage> {
       appBar: AppBar(
         title: const Center(child: Text('ARDeco Studio')),
       ),
-      body: ArCoreView(onArCoreViewCreated: augmentedRealityCoreViewCreated),
+      body: ArCoreView(
+        onArCoreViewCreated: augmentedRealityCoreViewCreated,
+        enableUpdateListener: true,
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    augmentRealityCoreController?.dispose();
+    super.dispose();
   }
 }
